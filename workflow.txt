@@ -1,0 +1,52 @@
+Setting up minion workflow on local machine
+
+Dependencies
+
+Anaconda
+
+One of the easiest ways to install python libraries and other software is to use conda install from Anaconda.
+
+Download Anaconda3: https://www.anaconda.com/distribution/. We want Anaconda3 so that it downloads Python3. Follow installation instructions from website.
+Once you have anaconda, configure the conda command to tell it where to look online for software. It does not matter what directory you’re in.
+conda config --add channels bioconda
+conda config --add channels conda-forge
+
+Guppy
+
+https://community.nanoporetech.com/downloads
+
+I downloaded Mac OSX version
+unzip ont-guppy-cpu_2.3.1_osx64.zip
+Add guppy to bashrc path (export PATH=$PATH:[your path]/ont-guppy-cpu/bin)
+
+export PATH=$PATH:/Users/emilyhumble/software/ont-guppy-cpu/bin
+
+
+
+MinKNOW
+Nanofilt
+R and RStudio
+
+Create conda environment
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#         Conda environment         #
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+conda create -n minion_sp_id
+conda activate minion_sp_id
+
+conda install -c anaconda hdf5
+conda install -c bioconda nanofilt
+conda install --yes -c conda-forge -c bioconda medaka==0.11.5 openblas==0.3.3 spoa racon minimap2
+pip install NGSpeciesID
+....
+
+
+conda deactivate
+conda activate minion_sp_id
+
+
+# Move and inspect fast5 files
+
