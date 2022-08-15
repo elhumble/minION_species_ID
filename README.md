@@ -29,7 +29,37 @@ may be helpful to get started.
 
 ## Getting started <a name="start"></a>
 
-1. Download this Github repository using the green 'Code' button at the top of the Github page. 
+1. Download this Github repository onto your own computer
+
+``` bash
+cd ~ ## Change this to the directory where you would like to store this GitHub repo
+
+git clone https://github.com/elhumble/minION_species_ID.git
+
+# Go into your new minION_species_ID directory and take a look at its contents
+cd minION_species_ID
+ls
+``
+<br>
+
+Your own copy of the `minION_species_ID` directory will be referred to as `BASEDIR` in the
+scripts below. You should see the following subdirectories:
+
+-   `data` has the raw fastq files we’ll be working on today
+
+-   `data/meta` is for storing metadata associated with the pipeline
+
+-   `data/out` is for storing output data produced by the pipeline
+
+-   `data/raw` is for storing raw data
+
+-   `docs` is for storing any relevant documents relating to the pipeline e.g. publications
+
+-   `scripts` is for storing scripts
+
+> Use the `cd` command in the Unix shell to move between directories
+
+<br>
 
 2. Install software. You will find further information on installing software in the
  [software installation advice](#installadvice) section of this repository.
@@ -43,10 +73,12 @@ may be helpful to get started.
 
 ## Input files <a name="inputs"></a>
 
-- *Move MinKNOW folder containing fast5 files to `data/raw`* The fast5 
+Move MinKNOW folder containing fast5 files to `data/raw` The fast5 
 files for a given sequencing run should be in their own folder within the `data/raw` folder.
 
-- *Create primer sequence files and save into `data/meta`* 
+
+
+- Create primer sequence files and save into `data/meta`
 Example:
 ```
 >Tryp_R2_UT__rev
@@ -66,18 +98,18 @@ GGATCTCGTCCGTTGACGGAA
 >Tryp_F6
 TTCCGTCAACGGACGAGATCC
 ```
-- *If using a reference database, create a fasta file with your reference sequences and
- save it in the `data/blastdb` folder.* 
-This file is used during the Blast step. The reliability of the Blast species identification depends on 
-the quality of this reference database - curate carefully! Each sequence header should include 
-the sample name, species identifier, and barcoding gene, separated by spaces.
+- If using a reference database, create a fasta file with your reference sequences and
+ save it into `data/blastdb`. This file is used during the Blast step. The reliability of 
+ the Blast species identification depends on the quality of this reference database - 
+ curate carefully! Each sequence header should include the sample name, species identifier, 
+ and barcoding gene, separated by spaces.
 
 
 ## Run the workflow <a name="runpipe"></a>
 
-### Inspect raw data <a name="raw"></a>
+### 1. Inspect raw data <a name="raw"></a>
 
-### Basecalling <a name="base"></a>
+### 2. Basecalling <a name="base"></a>
 
 ### Concatenate files <a name="cat"></a>
 
