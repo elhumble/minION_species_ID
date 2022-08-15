@@ -36,10 +36,11 @@ cd ~ ## Change this to the directory where you would like to store this GitHub r
 
 git clone https://github.com/elhumble/minION_species_ID.git
 
-# Go into your new minION_species_ID directory and take a look at its contents
+# Go into your new minION_species_ID directory and examine its contents
 cd minION_species_ID
 ls
-``
+```
+
 <br>
 
 Your own copy of the `minION_species_ID` directory will be referred to as `BASEDIR` in the
@@ -57,7 +58,8 @@ scripts below. You should see the following subdirectories:
 
 -   `scripts` is for storing scripts
 
-> Use the `cd` command in the Unix shell to move between directories
+> The `cd` command in the Unix shell is used to move between directories and the `ls` command
+is used to view the contents of directories
 
 <br>
 
