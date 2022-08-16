@@ -4,11 +4,6 @@ This pipeline is designed for processing and analyzing Oxford Nanopore Technolog
 MinION DNA-barcoding sequence data for species identification. 
 Assumes barcoded reads sequenced on a Flongle flow cell. 
 
-Basic knowledge of shell required –
-this [tutorial](https://linuxconfig.org/bash-scripting-tutorial-for-beginners)
-and [cheat sheet](https://bioinformaticsworkbook.org/Appendix/Unix/UnixCheatSheet.html#gsc.tab=0)
-may be helpful to get started.
-
 -------------
 # Table of contents
 1. [Basic shell scripting](#shell)
@@ -26,7 +21,7 @@ may be helpful to get started.
 5. [Output files](#outputs)
 6. [Software installation advice](#installadvice)
 
-[top](#top)
+[Back to top](#top)
 
 ## Basic shell scripting <a name="shell"></a>
 
@@ -37,7 +32,7 @@ may be helpful to get started.
 ## Download this GitHub repository to local machine <a name="clone"></a>
 
 First retrieve a copy of this repository and save it onto your local machine. If you have `git` installed
-onto your computer you can use `git clone`:
+onto your computer you can use `git clone` in the terminal (MacOSX & Linux) or MobaXterm (Windows):
 
 ``` bash
 cd ~ ## Change this to the directory where you would like to store this GitHub repo
@@ -52,7 +47,7 @@ Your own copy of the `minION_species_ID` directory will be referred to as `BASED
 scripts below. Take a look around:
 
 ``` bash
-# Go into your new minION_species_ID directory and examine its contents
+# Move into your new minION_species_ID directory and examine its contents
 
 cd minION_species_ID
 ls
@@ -68,23 +63,28 @@ You should see the following subdirectories:
 
 > The `cd` command in the Unix shell is used to move between directories and the `ls` command
 is used to view the contents of directories
-
 <br>
+<a href="#top">Back to top</a>
 
 ## Software dependencies <a name="Dependencies"></a>
 
 The following software is required to run the pipeline. You will find further information on 
-installing these in the [software installation advice](#installadvice) section of this repository.
+installing these in the [software installation advice](#installadvice) section at the bottom of this repository.
  
+- Guppy
+- hd5
+- NanoFilt
+- NGSpeciesID
+- R & Rstudio
 - MobaXterm (for Windows users only)
-- Conda
-- Guppy v3.1.5+781ed575
+- Text editor for example BBEdit for MacOSX or NotePad++ for Windows
+
 
 <a href="#top">Back to top</a>
 
 ## Input files <a name="inputs"></a>
 
-1. Move MinKNOW folder containing fast5 files to `data/raw` 
+Move MinKNOW folder containing fast5 files to `data/raw` 
 
 - Open MinKNOW
 - Go to ‘Experiments’ in the left menu bar
@@ -93,15 +93,23 @@ installing these in the [software installation advice](#installadvice) section o
 - Note the file path listed under ‘Current output directory’ e.g.
 `/Library/MinKNOW/data/./xxrunIDxx/xxsampleIDxx/xxyyyymmdd_no_MinIONID_flowcellID_noxx`
 
+Copy directory of raw data into `minION_species_ID` repository.
 
+``` bash
+MINKNOW_DIR=/Library/MinKNOW/data/run_1/sample_1/flowcell_2 # Change to where raw data is saved in MinKNOW
+BASEDIR=~/Desktop/minION_species_ID/data/raw # Change to raw data directory
 
+cp -r $MINKNOW_DIR $BASEDIR
 
+#Check the files have been copied across
 
+cd data/raw
+ls
+```
+> The fast5 files for a given sequencing run should be in their own folder within the `data/raw` folder.
 
-The fast5 files for a given sequencing run should be in their own folder within the `data/raw` folder.
+Create primer sequence file and save into `data/meta`
 
-
-2. Create primer sequence files and save into `data/meta`
 Example:
 ```
 >Tryp_R2_UT__rev
@@ -121,16 +129,42 @@ GGATCTCGTCCGTTGACGGAA
 >Tryp_F6
 TTCCGTCAACGGACGAGATCC
 ```
-- If using a reference database, create a fasta file with your reference sequences and
- save it into `data/blastdb`. This file is used during the Blast step. The reliability of 
- the Blast species identification depends on the quality of this reference database - 
- curate carefully! Each sequence header should include the sample name, species identifier, 
- and barcoding gene, separated by spaces.
-
 
 ## Run the workflow <a name="runpipe"></a>
 
 ### 1. Inspect raw data <a name="raw"></a>
+
+We are going to use the HDF5 software library to explore our raw ONT data
+
+``` bash
+
+# First load conda environment containing the hdf5 package
+
+conda activate minion_species_ID
+
+# View complete file content in readable form
+
+h5dump $BASEDIR/data/raw/fast5/<filename.fast5> | more
+
+# Get an overview of all the reads within a fast5 file
+
+h5ls $BASEDIR/data/raw/fast5/<filename.fast5>
+
+Count the reads in a fast5 file
+
+h5ls $BASEDIR/data/raw/fast5/<filename.fast5>
+
+# To inspect information stored for a specific read you can specify the read as though it were
+a directory in the command line
+
+h5ls $BASEDIR/data/raw/fast5/<filename.fast5>/<readname>
+
+# Inspect the raw signal for a specific read
+
+h5ls -d $BASEDIR/data/raw/fast5/<filename.fast5>/<readname>/Raw/Signal
+
+```
+
 
 ### 2. Basecalling <a name="base"></a>
 
@@ -148,7 +182,59 @@ TTCCGTCAACGGACGAGATCC
 
 ## Software installation advice <a name="installadvice"></a>
 
+One of the easiest ways to install most of the software required for this pipeline is to use `conda` from Anaconda.
+
+- Download Anaconda3: https://www.anaconda.com/distribution/. We want Anaconda3 so that it downloads Python3.
+Follow installation instructions from website.
+
+- Once you have anaconda, configure the conda command to tell it where to look online for software. It does not matter what directory you’re in.
+  - `conda config --add channels bioconda`
+  - `conda config --add channels conda-forge`
+  
+- Create and activate a new environment called minion-spid. This is where we will install most of the packages needed for the
+pipeline and will help us isolate and manage our project.
+
+```bash
+conda create -n minion_spid python=3.6 pip
+conda activate minion_spid
+
+```
+#### Basecall: Guppy
+https://community.nanoporetech.com/downloads
+
+- I downloaded Mac OSX version
+- `unzip ont-guppy-cpu_2.3.1_osx64.zip`
+- Add guppy to bashrc path (`export PATH=$PATH:<your path>/ont-guppy-cpu/bin`)
 
 
+#### HDF5
+[https://github.com/wdecoster/nanofilt]
+
+- `conda install -c bioconda nanofilt`
+- Runs as `NanoFilt <flags>`
+  - this was originally causing a problem before I added bioconda channel to conda
+
+
+#### Nanofilt
+https://github.com/wdecoster/nanofilt
+
+- `conda install -c bioconda nanofilt`
+- Runs as `NanoFilt <flags>`
+  - this was originally causing a problem before I added bioconda channel to conda
+
+#### NGSpeciesID
+[https://github.com/wdecoster/nanofilt]
+
+- `conda install -c bioconda nanofilt`
+- Runs as `NanoFilt <flags>`
+  - this was originally causing a problem before I added bioconda channel to conda
+
+
+
+conda install -c anaconda hdf5
+conda install -c bioconda nanofilt
+conda install --yes -c conda-forge -c bioconda medaka==0.11.5 openblas==0.3.3 spoa racon minimap2
+pip install NGSpeciesID
+conda deactivate
 
 
