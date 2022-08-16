@@ -1,4 +1,5 @@
 /docs
 /data/meta/**
+!/data/meta/**/
 /data/out/**
 /data/raw/
