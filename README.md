@@ -24,7 +24,7 @@ Assumes barcoded reads sequenced on a Flongle flow cell.
 
 ## Basic shell scripting <a name="shell"></a>
 
-This workflow assumes a basic understanding of shell scripting. This [tutorial](https://linuxconfig.org/bash-scripting-tutorial-for-beginners)
+This workflow assumes a basic understanding of shell scripting. [This tutorial](https://linuxconfig.org/bash-scripting-tutorial-for-beginners)
 and [cheat sheet](https://bioinformaticsworkbook.org/Appendix/Unix/UnixCheatSheet.html#gsc.tab=0)
 may be helpful to get started.
 
