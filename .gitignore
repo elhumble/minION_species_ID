@@ -1,5 +1,3 @@
 /docs
-/data/meta/**
-!/data/meta/**/
-/data/out/**
+/data/out/
 /data/raw/
