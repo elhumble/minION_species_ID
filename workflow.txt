@@ -47,6 +47,18 @@ pip install NGSpeciesID
 conda deactivate
 conda activate minion_sp_id
 
+----
+
+We can install a lot of what we need using conda
+
+conda create -n minion_spid python=3.6 pip
+conda activate minion_spid
+conda install -c anaconda hdf5
+conda install -c bioconda nanofilt
+conda install --yes -c conda-forge -c bioconda medaka==0.11.5 openblas==0.3.3 spoa racon minimap2
+pip install NGSpeciesID
+conda deactivate
+
 
 # Move and inspect fast5 files
 
