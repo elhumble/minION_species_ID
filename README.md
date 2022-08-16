@@ -6,11 +6,11 @@ Assumes barcoded reads sequenced on a Flongle flow cell.
 
 -------------
 # Table of contents
-- [Basic shell scripting](#shell)
-- [Download this GitHub repository to local machine](#clone)
-- [Software dependencies](#Dependencies)
-- [Input files](#inputs)
-- [Run the pipeline](#runpipe)
+1. [Basic shell scripting](#shell)
+2. [Download this GitHub repository to local machine](#clone)
+2. [Software dependencies](#Dependencies)
+3. [Input files](#inputs)
+4. [Run the pipeline](#runpipe)
     1. [Inspect raw data](#raw)
     2. [Basecalling](#base)
     3. [Concatenate files](#cat)
@@ -18,7 +18,7 @@ Assumes barcoded reads sequenced on a Flongle flow cell.
     5. [Adaptor trimming and demultiplexing](#demult)
     6. [Filtering](#filt)
     7. [NGSpeciesID](#ngspeciesid)
-- [Software installation advice](#installadvice)
+5. [Software installation advice](#installadvice)
 
 [Back to top](#top)
 
@@ -40,10 +40,9 @@ git clone https://github.com/nt246/lcwgs-guide-tutorial.git
 
 ```
 
-Alternatively, you can manually download the repository by clicking on the green Code button at the top of this page.
+Otherwise, you can manually download the repository by clicking on the green Code button at the top of this page.
 
-Your own copy of the `minION_species_ID` directory will be referred to as `BASEDIR` in the
-scripts below. Take a look around:
+Take a look around:
 
 ``` bash
 # Move into your new minION_species_ID directory and examine its contents
