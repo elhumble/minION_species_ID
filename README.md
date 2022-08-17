@@ -30,24 +30,19 @@ may be helpful to get started.
 
 ## Download this GitHub repository to local machine <a name="clone"></a>
 
-First retrieve a copy of this repository and save it onto your local machine. If you have `git` installed
-onto your computer you can use `git clone` in the terminal (MacOSX & Linux) or MobaXterm (Windows):
+First retrieve a copy of this repository and save it onto your local machine by clicking on the green
+Code button at the top of this page followed by Download ZIP.
 
-``` bash
-cd ~ ## Change this to the directory where you would like to store this GitHub repo
-
-git clone https://github.com/nt246/lcwgs-guide-tutorial.git
-
-```
-
-Otherwise, you can manually download the repository by clicking on the green Code button at the top of this page.
+> Your own copy of this directory will be referred to as BASEDIR in many of the commands and scripts below. 
 
 Take a look around:
 
 ``` bash
 # Move into your new minION_species_ID directory and examine its contents
 
-cd minION_species_ID
+BASEDIR=~/Desktop/minION_species_ID # Full path to repository
+
+cd $BASEDIR 
 ls
 ```
 You should see the following subdirectories:
@@ -62,12 +57,6 @@ You should see the following subdirectories:
 > Tip: The `cd` command in the Unix shell is used to move between directories and the `ls` command
 is used to view the contents of directories
 
-Create some new directories
-
-data
-
-
-
 <br>
 <a href="#top">Back to top</a>
 
@@ -75,6 +64,7 @@ data
 
 The following software is required to run the pipeline. You will find further information on 
 installing these in the [software installation advice](#installadvice) section at the bottom of this repository.
+Make sure you have got these up and running before proceeding.
  
 - Guppy
 - hd5
@@ -89,31 +79,33 @@ installing these in the [software installation advice](#installadvice) section a
 
 ## Input files <a name="inputs"></a>
 
-Locate raw sequencing files:
+We need to transfer the raw sequencing files from MinKNOW into our new `minION_species_ID` repository
+so that we can analyse the data. Let's first locate the raw sequencing files:
 
 - Open MinKNOW
 - Go to ‘Experiments’ in the left menu bar
 - Choose the relevant sampling run e.g. CVRI_test_2
 - Click on this sampling run
 - Note the file path listed under ‘Current output directory’ e.g.
-`/Library/MinKNOW/data/run_1/sample_1/flowcell_2`
+`/Library/MinKNOW/data/CVRI_test_2/sample_1/flowcell_2`
 
-Copy directory of raw data into `minION_species_ID` repository.
+Copy this directory of raw data into your `minION_species_ID` repository.
 
 ``` bash
-MINKNOW_DIR=/Library/MinKNOW/data/run_1/sample_1/flowcell_2 # Change to where raw data is saved in MinKNOW
-BASEDIR=~/Desktop/minION_species_ID/data/raw # Change to raw data directory
+MINKNOW_DIR=/Library/MinKNOW/data/CVRI_test_2/sample_1/flowcell_2 # Change to where raw data is saved in MinKNOW
+BASEDIR=~/Desktop/minION_species_ID # Change to minION_species_ID directory
 
-cp -r $MINKNOW_DIR $BASEDIR
+cp -r $MINKNOW_DIR $BASEDIR/data/raw
 
 #Check the files have been copied across
 
 cd data/raw
 ls
 ```
-> Tip: he fast5 files for a given sequencing run should be in their own folder within the `data/raw` folder.
+> Tip: The fast5 files for a given sequencing run should be in their own folder within the `data/raw` folder.
 
-Create primer sequence file and save into `data/meta`
+We will need a file containing our primer sequences for later on in the pipeline. Create this using
+a text editor and save into `data/meta`.
 
 Example:
 ```
@@ -145,7 +137,7 @@ We will use the HDF5 software library to explore our raw ONT data.
 
 # First load conda environment containing the hdf5 package
 
-conda activate minion_species_ID
+conda activate hdf5
 
 # View complete file content in readable form
 
@@ -168,6 +160,10 @@ h5ls $BASEDIR/data/raw/fast5/<filename.fast5>/<readname>
 
 h5ls -d $BASEDIR/data/raw/fast5/<filename.fast5>/<readname>/Raw/Signal
 
+# deactivate conda env
+
+conda deactivate
+
 ```
 
 
@@ -178,18 +174,17 @@ the fast5 files into bases. We will use guppy to basecall our raw sequencing rea
 
 There are two scripts available within this pipeline to do this: `gpy_basecaller_fast.sh`
 and `gpy_basecaller_hac.sh.` These reflect the two modes in which guppy can be run: fast and
-high accuracy. For our training dataset, run time for the fast basecaller is around 2 hours and
+high accuracy. For our training dataset, run time for the fast basecaller is around 2 hours while
 run time for the high accuracy basecaller is around 12-15 hours. The high accuracy basecaller
 is recommended. Both are executed in the same way.
 
 ```bash
 # Create a directory for basecalled data
 
-mkdir data/out/basecalled
+mkdir $BASEDIR/data/out/basecalled
 
 ```
-Edit the basecaller script so that the `FAST5` variable points to the directory containing your fast5 files
-and the `OUT` variable points to the `basecalled` directory you just made.
+Edit the basecaller script so that the variable names point to the correct directories.
 
 ```bash
 
@@ -201,7 +196,7 @@ and the `OUT` variable points to the `basecalled` directory you just made.
 The `basecalled` directory should now contain the log files, a sequencing_summary.txt file
 and two new directories: `pass` and `fail`.
 
-Take a look in these new folders. What files you see?
+Take a look in these new folders. What files can you see?
 
 ### 3. Concatenate files <a name="cat"></a>
 
@@ -211,7 +206,7 @@ We will now concatenate all passed `fastq.gz` files generated by guppy into one 
 
 # Make a new directory for this file
 
-mkdir data/out/basecalled/passed_reads
+mkdir $BASEDIR/data/out/basecalled/passed_reads
 
 # Concatenate passed fastq files
 
@@ -222,7 +217,8 @@ cat data/out/basecalled/pass/*.fastq.gz > data/out/basecalled/passed_reads/passe
 ### 4. Quality assessment <a name="qc"></a>
 
 We will use the R script MinIONQC to generate diagnostic plots and data for quality control (QC) of our sequencing data.
-This R package works directly with the `sequencing_summary.txt` file produced by Guppy. More info [here](https://github.com/roblanf/minion_qc).
+This R package works directly with the `sequencing_summary.txt` file produced by Guppy. More info 
+[here](https://github.com/roblanf/minion_qc).
 
 ```bash
 # Create a directory for QC data
@@ -272,7 +268,7 @@ Edit the `3.0_gpy_barcoder.sh` script so that the variable names point to the co
 ./2.0_gpy_barcoder.sh
 ```
 
-The output folder should now contain folders for each barcoded set of sequences
+The output folder should now contain folders for each barcoded set of sequences that correspond to samples.
 
 ### 6. Filtering <a name="filt"></a>
 
@@ -308,7 +304,7 @@ Edit the `--m` (mean amplicon length), `--s` (size range) and `--abundance_ratio
 (threshold proportion of total reads for a cluster to be retained) parameters in the `5.0_NGSpeciesID.sh`
 script.
 
-Ensure primer files match relevant primers.
+Ensure primer files are correct.
 
 Suggested parameters for COI fish primers:
 
@@ -318,28 +314,21 @@ Parameter | Value
 --s | 100
 --abundance_ratio | 0.05
 
-The output is a directory per barcode containing fasta consensus sequences that can be used
+The output is one directory per barcode containing fasta consensus sequences. These can be used
 for blasting against a database.
 
 ## Software installation advice <a name="installadvice"></a>
 
 One of the easiest ways to install most of the software required for this pipeline is to use `conda` from Anaconda.
 
-- Download Anaconda3: https://www.anaconda.com/distribution/. We want Anaconda3 so that it downloads Python3.
+- Download Miniconda3 [here](https://docs.conda.io/en/latest/miniconda.html#:~:text=Miniconda%20is%20a%20free%20minimal,zlib%20and%20a%20few%20others).
+We want Miniconda3 so that it downloads Python3.
 Follow installation instructions from website.
 
-- Once you have anaconda, configure the conda command to tell it where to look online for software. It does not matter what directory you’re in.
+- Once you have miniconda, configure the conda command to tell it where to look online for software. It does not matter what directory you’re in.
   - `conda config --add channels bioconda`
   - `conda config --add channels conda-forge`
-  
-- Create and activate a new environment called minion-spid. This is where we will install most of the packages needed for the
-pipeline and will help us isolate and manage our project.
 
-```bash
-conda create -n minion_spid python=3.6 pip
-conda activate minion_spid
-
-```
 #### Basecall: Guppy
 https://community.nanoporetech.com/downloads
 
@@ -351,31 +340,36 @@ https://community.nanoporetech.com/downloads
 #### HDF5
 [https://github.com/wdecoster/nanofilt]
 
-- `conda install -c bioconda nanofilt`
-- Runs as `NanoFilt <flags>`
-  - this was originally causing a problem before I added bioconda channel to conda
+Create and activate a new environment called minion-spid. This is where we will install most of the packages needed for the
+pipeline and will help us isolate and manage our project.
 
+`conda create -n hdf5 python=3.6 pip`
+`conda activate hdf5`
+
+Install nanofilt into that environment. Deactivate env.
+
+`conda install -c anaconda hd5`
+`h5dump`
+`conda deactivate`
 
 #### Nanofilt
 https://github.com/wdecoster/nanofilt
 
-- `conda install -c bioconda nanofilt`
-- Runs as `NanoFilt <flags>`
-  - this was originally causing a problem before I added bioconda channel to conda
+`conda create -n nanofilt python=3.6 pip`
+`conda activate nanofilt`
+`conda install -c bioconda nanofilt`
+`NanoFilt --help`
+`conda deactivate`
+
 
 #### NGSpeciesID
 [https://github.com/wdecoster/nanofilt]
 
-- `conda install -c bioconda nanofilt`
-- Runs as `NanoFilt <flags>`
-  - this was originally causing a problem before I added bioconda channel to conda
-
-
-
-conda install -c anaconda hdf5
-conda install -c bioconda nanofilt
-conda install --yes -c conda-forge -c bioconda medaka==0.11.5 openblas==0.3.3 spoa racon minimap2
-pip install NGSpeciesID
-conda deactivate
+`conda create -n NGSpeciesID python=3.6 pip`
+`conda activate NGSpeciesID`
+`conda install --yes -c conda-forge -c bioconda medaka==0.11.5 openblas==0.3.3 spoa racon minimap2`
+`pip install NGSpeciesID`
+`NGSpeciesID --help`
+`conda deactivate`
 
 
