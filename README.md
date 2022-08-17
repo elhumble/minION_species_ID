@@ -338,7 +338,7 @@ https://community.nanoporetech.com/downloads
 
 
 #### HDF5
-[https://github.com/wdecoster/nanofilt]
+https://anaconda.org/anaconda/hdf5
 
 Create and activate a new environment called minion-spid. This is where we will install most of the packages needed for the
 pipeline and will help us isolate and manage our project.
@@ -363,7 +363,7 @@ https://github.com/wdecoster/nanofilt
 
 
 #### NGSpeciesID
-[https://github.com/wdecoster/nanofilt]
+https://github.com/ksahlin/NGSpeciesID
 
 `conda create -n NGSpeciesID python=3.6 pip`
 `conda activate NGSpeciesID`
