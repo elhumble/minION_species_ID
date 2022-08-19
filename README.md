@@ -326,15 +326,15 @@ We want Miniconda3 so that it downloads Python3.
 Follow installation instructions from website.
 
 - Once you have miniconda, configure the conda command to tell it where to look online for software. It does not matter what directory you’re in.
-  - `conda config --add channels bioconda`
-  - `conda config --add channels conda-forge`
+  - `conda config --add channels bioconda` 
+  - `conda config --add channels conda-forge` 
 
 #### Basecall: Guppy
 https://community.nanoporetech.com/downloads
 
 - I downloaded Mac OSX version
-- `unzip ont-guppy-cpu_2.3.1_osx64.zip`
-- Add guppy to bashrc path (`export PATH=$PATH:<your path>/ont-guppy-cpu/bin`)
+- `unzip ont-guppy-cpu_2.3.1_osx64.zip` 
+- Add guppy to bashrc path (`export PATH=$PATH:<your path>/ont-guppy-cpu/bin`) 
 
 
 #### HDF5
@@ -343,33 +343,33 @@ https://anaconda.org/anaconda/hdf5
 Create and activate a new environment called minion-spid. This is where we will install most of the packages needed for the
 pipeline and will help us isolate and manage our project.
 
-`conda create -n hdf5 python=3.6 pip`
-`conda activate hdf5`
+`conda create -n hdf5 python=3.6 pip` 
+`conda activate hdf5` 
 
 Install nanofilt into that environment. Deactivate env.
 
-`conda install -c anaconda hd5`
-`h5dump`
+`conda install -c anaconda hd5` 
+`h5dump` 
 `conda deactivate`
 
 #### Nanofilt
 https://github.com/wdecoster/nanofilt
 
-`conda create -n nanofilt python=3.6 pip`
-`conda activate nanofilt`
-`conda install -c bioconda nanofilt`
-`NanoFilt --help`
-`conda deactivate`
+`conda create -n nanofilt python=3.6 pip` 
+`conda activate nanofilt` 
+`conda install -c bioconda nanofilt` 
+`NanoFilt --help` 
+`conda deactivate` 
 
 
 #### NGSpeciesID
 https://github.com/ksahlin/NGSpeciesID
 
-`conda create -n NGSpeciesID python=3.6 pip`
-`conda activate NGSpeciesID`
-`conda install --yes -c conda-forge -c bioconda medaka==0.11.5 openblas==0.3.3 spoa racon minimap2`
-`pip install NGSpeciesID`
-`NGSpeciesID --help`
+`conda create -n NGSpeciesID python=3.6 pip` 
+`conda activate NGSpeciesID` 
+`conda install --yes -c conda-forge -c bioconda medaka==0.11.5 openblas==0.3.3 spoa racon minimap2` 
+`pip install NGSpeciesID` 
+`NGSpeciesID --help` 
 `conda deactivate`
-
+ 
 
