@@ -265,7 +265,7 @@ Edit the `3.0_gpy_barcoder.sh` script so that the variable names point to the co
 ```bash
 # Run the script
 
-./2.0_gpy_barcoder.sh
+./3.0_gpy_barcoder.sh
 ```
 
 The output folder should now contain folders for each barcoded set of sequences that correspond to samples.
