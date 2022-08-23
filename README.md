@@ -280,7 +280,9 @@ Edit the `4.0_nanofilt.sh` script so that the variable names point to the correc
 ```bash
 # Run the script
 
+conda activate nanofilt
 ./4.0_nanofilt.sh
+conda deactivate
 ```
 
 The output is a filtered fastq file in each barcode directory.
@@ -313,6 +315,13 @@ Parameter | Value
 --m | 500
 --s | 100
 --abundance_ratio | 0.05
+
+```bash
+
+conda activate NGSpeciesID
+./5.0_NGSpeciesID.sh
+conda deactivate
+```
 
 The output is one directory per barcode containing fasta consensus sequences. These can be used
 for blasting against a database.
